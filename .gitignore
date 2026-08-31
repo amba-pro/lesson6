@@ -1,8 +1,14 @@
-build/
+# Артефакты сборки
+**/build/
 .vs/
-*.exe
 *.obj
-*.o
 *.pdb
 *.ilk
+*.exp
 *.user
+
+# Не игнорируем готовую библиотеку для exe
+!exe/libs/matrixlib/*.dll
+!exe/libs/matrixlib/*.lib
+!exe/libs/matrixlib/*.so
+!exe/libs/matrixlib/*.a

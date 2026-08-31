@@ -1,14 +1,37 @@
-# lesson6
+# lesson6 — динамическая библиотека Matrix
 
-Класс `Matrix` с перегрузкой операторов: `+`, `-`, `*`, `+=`, `-=`, `*=`, `<<`, `>>`.
+## Структура
 
-## Сборка
+```
+lib/                    — CMake-проект динамической библиотеки
+  matrix.h / matrix.cpp
+  CMakeLists.txt
 
-```bash
+exe/                    — независимый CMake-проект исполняемого файла
+  main.cpp              — импорт через __declspec(dllimport)
+  CMakeLists.txt
+  libs/matrixlib/       — matrix.dll + matrix.lib
+```
+
+## Сборка библиотеки
+
+```bat
+cd lib
 mkdir build
 cd build
 cmake ..
 cmake --build . --config Debug
 ```
 
-Запуск: `Debug\matrix.exe`
+Скопируйте `Debug\matrix.dll` и `Debug\matrix.lib` в `exe\libs\matrixlib\`.
+
+## Сборка и запуск exe
+
+```bat
+cd exe
+mkdir build
+cd build
+cmake ..
+cmake --build . --config Debug
+Debug\matrix_app.exe
+```

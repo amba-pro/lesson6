@@ -1,10 +1,20 @@
-#include <src/matrix.h>
+#include "matrix.h"
 
 #include <cmath>
 #include <iostream>
 
 namespace math
 {
+
+// Конструктор по умолчанию
+Matrix::Matrix() : cols_(0), rows_(0), mvec_() {}
+
+// Конструктор с размерами
+Matrix::Matrix(int rows, int cols)
+    : cols_(cols), rows_(rows), mvec_(std::vector<real>(rows * cols)) {}
+
+// Деструктор
+Matrix::~Matrix() {}
 
 // Неконстантный оператор доступа к элементу — возвращает ссылку для изменения
 real& Matrix::operator()(int row, int col)
@@ -50,7 +60,7 @@ Matrix& Matrix::operator+=(const Matrix& B)
         std::cerr << "Matrix: Matrices can't be added!" << std::endl;
         return *this;
     }
-    for (int pos = 0; pos < this->mvec_.size(); ++pos)
+    for (int pos = 0; pos < static_cast<int>(this->mvec_.size()); ++pos)
     {
         this->mvec_.at(pos) += B.mvec_.at(pos);
     }
@@ -65,7 +75,7 @@ Matrix& Matrix::operator-=(const Matrix& B)
         std::cerr << "Matrix: Matrices can't be subtracted!" << std::endl;
         return *this;
     }
-    for (int pos = 0; pos < this->mvec_.size(); ++pos)
+    for (int pos = 0; pos < static_cast<int>(this->mvec_.size()); ++pos)
     {
         this->mvec_.at(pos) -= B.mvec_.at(pos);
     }
@@ -75,14 +85,14 @@ Matrix& Matrix::operator-=(const Matrix& B)
 // Умножение матрицы на число с присваиванием: this *= scalar
 Matrix& Matrix::operator*=(real scalar)
 {
-    for (int pos = 0; pos < this->mvec_.size(); ++pos)
+    for (int pos = 0; pos < static_cast<int>(this->mvec_.size()); ++pos)
     {
         this->mvec_.at(pos) *= scalar;
     }
     return *this;
 }
 
-// Сложение двух матриц (дружественная функция)
+// Сложение двух матриц
 Matrix operator+(const Matrix& A, const Matrix& B)
 {
     if ((A.cols_ != B.cols_) || (A.rows_ != B.rows_))
@@ -91,14 +101,14 @@ Matrix operator+(const Matrix& A, const Matrix& B)
         return Matrix(0, 0);
     }
     Matrix M(A.rows_, A.cols_);
-    for (int pos = 0; pos < A.mvec_.size(); ++pos)
+    for (int pos = 0; pos < static_cast<int>(A.mvec_.size()); ++pos)
     {
         M.mvec_.at(pos) = A.mvec_.at(pos) + B.mvec_.at(pos);
     }
     return M;
 }
 
-// Вычитание двух матриц (дружественная функция)
+// Вычитание двух матриц
 Matrix operator-(const Matrix& A, const Matrix& B)
 {
     if ((A.cols_ != B.cols_) || (A.rows_ != B.rows_))
@@ -107,14 +117,14 @@ Matrix operator-(const Matrix& A, const Matrix& B)
         return Matrix(0, 0);
     }
     Matrix M(A.rows_, A.cols_);
-    for (int pos = 0; pos < A.mvec_.size(); ++pos)
+    for (int pos = 0; pos < static_cast<int>(A.mvec_.size()); ++pos)
     {
         M.mvec_.at(pos) = A.mvec_.at(pos) - B.mvec_.at(pos);
     }
     return M;
 }
 
-// Умножение двух матриц (дружественная функция)
+// Умножение двух матриц
 Matrix operator*(const Matrix& A, const Matrix& B)
 {
     if (A.cols_ != B.rows_)
@@ -125,7 +135,7 @@ Matrix operator*(const Matrix& A, const Matrix& B)
 
     Matrix M(A.rows_, B.cols_);
 
-    for (int pos = 0; pos < M.mvec_.size(); ++pos)
+    for (int pos = 0; pos < static_cast<int>(M.mvec_.size()); ++pos)
     {
         int row = (int)std::floor(pos / M.cols_);
         int col = pos - row * M.cols_;
@@ -138,7 +148,7 @@ Matrix operator*(const Matrix& A, const Matrix& B)
     return M;
 }
 
-// Оператор вывода матрицы в поток (дружественная функция)
+// Оператор вывода матрицы в поток
 std::ostream& operator<<(std::ostream& os, const Matrix& m)
 {
     for (int i = 0; i < m.rows_; ++i)
@@ -152,7 +162,7 @@ std::ostream& operator<<(std::ostream& os, const Matrix& m)
     return os;
 }
 
-// Оператор ввода матрицы из потока (дружественная функция)
+// Оператор ввода матрицы из потока
 std::istream& operator>>(std::istream& is, Matrix& m)
 {
     for (int i = 0; i < m.rows_; ++i)
